@@ -1,0 +1,26 @@
+# Micronaut Jackson Issue
+
+Micronaut doesn't honor Jackson's _@JsonGetter_ or _@JsonSetter_ when the property has the same name on entities (_@Entity_) and projections (_@Introspected_).
+
+[,java]
+----
+@Introspected
+public class ContactIntrospected
+{
+    @JsonIgnore
+    private String phone;
+
+    @JsonGetter("phone")
+    public String formattedNumber() { //<.>
+        return Formatter.formatPhone(phone);
+    }
+
+    @JsonIgnore
+    public String getPhone() //<.>
+    {
+        return phone;
+    }
+----
+. Never gets called
+. Called even though it is ignored
+
